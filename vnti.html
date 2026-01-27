@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLK – Regler & Standarder | INSU</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    :root {
+      --insu-yellow: #edc73c;
+    }
+
+    @font-face {
+      font-family: "CircularPro Medium";
+      src: url("fonts/CircularPro-Medium.woff2") format("woff2"),
+           url("fonts/CircularPro-Medium.woff") format("woff");
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "CircularPro Black";
+      src: url("fonts/CircularPro-Black.woff2") format("woff2"),
+           url("fonts/CircularPro-Black.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "CircularPro Medium", sans-serif;
+      margin: 0;
+      background: #fffef8;
+      color: #000;
+    }
+
+    /* --- Header och logotyp --- */
+    .insu-header {
+      text-align: center;
+      padding: 25px 0 10px;
+    }
+
+    .insu-header img {
+      height: 60px;
+    }
+
+    /* --- Banner --- */
+    .banner {
+      background-image: url("Ros_PLK.png"); /* <- PLK-bild */
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 0 8px 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(237, 199, 60, 0.5); /* gul overlay, 50% */
+    }
+
+    .banner-content {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      font-family: "CircularPro Medium", sans-serif;
+    }
+
+    .banner h1 {
+      font-family: "CircularPro Black", sans-serif;
+      font-size: 1.9rem;
+      margin-bottom: 8px;
+    }
+
+    .banner p {
+      font-size: 1rem;
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    /* --- Huvudinnehåll --- */
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .pdf-list ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+    }
+
+    .pdf-list li {
+      margin-bottom: 14px;
+    }
+
+    .pdf-list a {
+      display: block;
+      padding: 12px 18px;
+      background: #fff8dc;
+      border-left: 4px solid var(--insu-yellow);
+      text-decoration: none;
+      color: #000;
+      font-family: "CircularPro Medium", sans-serif;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .pdf-list a:hover {
+      background: var(--insu-yellow);
+      color: #000;
+    }
+
+    /* --- Navigering & footer --- */
+    .back-link {
+      display: inline-block;
+      margin: 10px 20px;
+      text-decoration: none;
+      color: #000;
+      font-size: 0.95rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .back-link:hover {
+      border-color: #000;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      padding: 20px;
+      color: #555;
+    }
+
+      .wave-full{display:block;width:100%;height:auto;margin:30px 0 0;}
+
+/* ===== Accordion för kategorier (utan JS) ===== */
+.cat{
+  margin:16px 0;
+  border-radius:6px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
+}
+
+.cat summary{
+  cursor:pointer;
+  padding:12px 16px;
+  background:#fff8dc;
+  border-left:4px solid var(--insu-yellow);
+  font-family:"CircularPro Black", sans-serif;
+  user-select:none;
+}
+
+.cat summary::-webkit-details-marker{ display:none; }
+
+.cat summary::after{
+  content:"▾";
+  float:right;
+  transition:transform .2s ease;
+}
+
+.cat[open] summary::after{ transform:rotate(180deg); }
+
+.cat .cat-body{
+  padding:12px 16px 2px;
+  background:#fff;
+}
+
+.cat .cat-body ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.cat .cat-body li{ margin:0 0 14px; }
+
+/* Återanvänd din befintliga pdf-list-stil (om du har en). 
+   Om inte: här är en som matchar era gula rutor. */
+.cat .cat-body a{
+  display:block;
+  padding:12px 18px;
+  background:#fff8dc;
+  border-left:4px solid var(--insu-yellow);
+  text-decoration:none;
+  color:#000;
+  border-radius:4px;
+  transition:all .2s ease;
+}
+.cat .cat-body a:hover{
+  background:var(--insu-yellow);
+  color:#000;
+}
+  </style>
+</head>
+<body>
+
+  <!-- INSU logga -->
+  <div class="insu-header">
+    <img src="YH-logo.png" alt="INSU Yrkeshögskola logotyp">
+  </div>
+
+  <!-- Banner med gul overlay -->
+  <header class="banner">
+    <div class="banner-content">
+      <h1>Regelverk – VNTI 2026</h1>
+      <p>Här hittar du det godkända materialet som är tillåtet under din digitala tentamen.</p>
+    </div>
+  </header>
+
+  <!-- Lista med PDF-filer -->
+  <main class="pdf-list">
+    <h2>Godkänt material</h2>
+
+<details class="cat">
+<summary><b>AFSar</b></summary>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/AFSar/AFS_oversikt_from_250101.pdf">AFS översikt from 250101</a></li>
+
+<li><a href="pdf/vnti/AFSar/arbetutrustning-och-personlig-skyddsutrustning-saker-anvandning-afs2023-11.pdf">Arbetsutrustning och personlig skyddsutrustning – säker användning (AFS 2023:11)</a></li>
+
+<li><a href="pdf/vnti/AFSar/gransvarden-for-luftvagsexponering-i-arbetsmiljon-afs2023-14.pdf">Gränsvärden för luftvägsexponering i arbetsmiljön (AFS 2023:14)</a></li>
+
+<li><a href="pdf/vnti/AFSar/medicinska-kontroller-i-arbetslivet-afs2023-15.pdf">Medicinska kontroller i arbetslivet (AFS 2023:15)</a></li>
+
+<li><a href="pdf/vnti/AFSar/planering-och-organisering-av-arbetsmiljoarbete-grundlaggande-skyldigheter-for-dig-med-arbetsgivaransvar-afs2023-2.pdf">Planering och organisering av arbetsmiljöarbete – grundläggande skyldigheter för dig med arbetsgivaransvar (AFS 2023:2)</a></li>
+
+<li><a href="pdf/vnti/AFSar/produkter-enkla-tryckkarl-afs2023-6.pdf">Produkter – enkla tryckkärl (AFS 2023:6)</a></li>
+
+<li><a href="pdf/vnti/AFSar/produkter-forbud-att-pa-marknaden-slappa-ut-ledade-skarverktyg-avsedda-for-barbara-handhallna-rojsagar-afs2023-8.pdf">Produkter – förbud att på marknaden släppa ut ledade skärverktyg avsedda för bärbara handhållna röjsågar (AFS 2023:8)</a></li>
+
+<li><a href="pdf/vnti/AFSar/produkter-maskiner-afs2023-4.pdf">Produkter – maskiner (AFS 2023:4)</a></li>
+
+<li><a href="pdf/vnti/AFSar/produkter-stegar-stallningar-och-viss-annan-utrustning-for-arbete-pa-hojd-samt-vissa-trycksatta-anordningar-afs2023-9.pdf">Produkter – stegar, ställningar och viss annan utrustning för arbete på höjd samt vissa trycksatta anordningar (AFS 2023:9)</a></li>
+
+<li><a href="pdf/vnti/AFSar/produkter-tryckbarande-anordningar-afs2023-5.pdf">Produkter – tryckbärande anordningar (AFS 2023:5)</a></li>
+
+<li><a href="pdf/vnti/AFSar/produkter-utrustning-for-potentiellt-explosiva-atmosfarer-afs2023-7.pdf">Produkter – utrustning för potentiellt explosiva atmosfärer (AFS 2023:7)</a></li>
+
+<li><a href="pdf/vnti/AFSar/projektering-och-byggarbetsmiljosamordning-grundlaggande-skyldigheter-afs2023-3.pdf">Projektering och byggarbetsmiljösamordning – grundläggande skyldigheter (AFS 2023:3)</a></li>
+
+<li><a href="pdf/vnti/AFSar/risker-i-arbetsmiljon-afs2023-10.pdf">Risker i arbetsmiljön (AFS 2023:10)</a></li>
+
+<li><a href="pdf/vnti/AFSar/risker-vid-vissa-typer-av-arbeten-afs2023-13-konsoliderad.pdf">Risker vid vissa typer av arbeten (AFS 2023:13, konsoliderad)</a></li>
+
+<li><a href="pdf/vnti/AFSar/systematiskt-arbetsmiljoarbete-grundlaggande-skyldigheter-for-dig-med-arbetsgivaransvar-afs2023-1.pdf">Systematiskt arbetsmiljöarbete – grundläggande skyldigheter för dig med arbetsgivaransvar (AFS 2023:1)</a></li>
+
+<li><a href="pdf/vnti/AFSar/utformning-av-arbetsplatser-afs2023-12.pdf">Utformning av arbetsplatser (AFS 2023:12)</a></li>
+
+</details>
+</ul>
+</div>
+
+<details class="cat">
+<summary><b>Arbetsmiljö</b></summary>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/Arbetsmiljö/SBUF_12241_Slutrapport_Ratt_arbetsmiljo_for_montorer_och_driftpersonal.pdf">SBUF 12241 Slutrapport – Rätt arbetsmiljö för montörer och driftpersonal</a></li>
+
+<li><a href="pdf/vnti/Arbetsmiljö/arbetsmiljolagen-bok-h008.pdf">Arbetsmiljölagen (bok H008)</a></li>
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>BBR</b></summary>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/BBR/BFS2024-4_Aktsamhet.pdf">BFS 2024:4 Aktsamhet</a></li>
+
+<li><a href="pdf/vnti/BBR/BFS2024-5_BBR_30.pdf">BFS 2024:5 BBR 30</a></li>
+
+<li><a href="pdf/vnti/BBR/BFS2024-7_Brand.pdf">BFS 2024:7 Brand</a></li>
+
+<li><a href="pdf/vnti/BBR/BFS2024-8_HHM.pdf">BFS 2024:8 HHM</a></li>
+
+<li><a href="pdf/vnti/BBR/BFS2024-9_Anvandning.pdf">BFS 2024:9 Användning</a></li>
+
+<li><a href="pdf/vnti/BBR/BFS2024-10_Buller.pdf">BFS 2024:10 Buller</a></li>
+
+<li><a href="pdf/vnti/BBR/BFS2024-14_Energi_BBR_31.pdf">BFS 2024:14 Energi BBR 31</a></li>
+
+<li><a href="pdf/vnti/BBR/konsoliderad-bbr-2011-6-tom-2020-4.pdf">Konsoliderad BBR 2011:6 t.o.m. 2020:4</a></li>
+
+<li><a href="pdf/vnti/BBR/Oversikt_Byggregler_uppdat_2025.pdf">Översikt Byggregler uppdat 2025</a></li>
+
+<li><a href="pdf/vnti/BBR/Oversikt_PBL_MB_AML.pdf">Översikt PBL, MB, AML</a></li>
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>Folkhälsomyndighetens allmänna råd</b></summary>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/Folkhälsomyndighetens allmänna råd/fohmfs-2014-18 ventilation.pdf">FoHMFS 2014:18 – Ventilation</a></li>
+
+<li><a href="pdf/vnti/Folkhälsomyndighetens allmänna råd/hslf-fs-2024-10.pdf">HSLF-FS 2024:10</a></li>
+
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>Imkanal 2022</b></summary>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/Imkanal 2022/Om Imkanal 2022 – Imkanal2022.pdf">Om Imkanal 2022 – Imkanal2022</a></li>
+
+<li><a href="pdf/vnti/Imkanal 2022/Lathund-Imkanal-2022.pdf">Lathund Imkanal 2022</a></li>
+
+<li><a href="pdf/vnti/Imkanal 2022/Föreskriften-Imkanal-2022.pdf">Föreskriften Imkanal 2022</a></li>
+
+<li><a href="pdf/vnti/Imkanal 2022/Bildsvit Imkanal 2012.pdf">Bildsvit Imkanal 2012</a></li>
+
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>Lagtexter PBL mm</b></summary></b>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/Lagtexter PBL mm/Plan- och bygglag (2010_900) _ Sveriges riksdag.pdf">Plan- och bygglag (2010:900) – Sveriges riksdag</a></li>
+
+<li><a href="pdf/vnti/Lagtexter PBL mm/Plan- och byggförordning (2011_338) _ Sveriges riksdag.pdf">Plan- och byggförordning (2011:338) – Sveriges riksdag</a></li>
+
+<li><a href="pdf/vnti/Lagtexter PBL mm/MB 9 kap.pdf">MB 9 kap</a></li>
+
+<li><a href="pdf/vnti/Lagtexter PBL mm/Förordning (1998_899) om miljöfarlig verksamhet och hälsoskydd _ Lagen.nu.pdf">Förordning (1998:899) om miljöfarlig verksamhet och hälsoskydd</a></li>
+
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>Lagtexter_avtalslagen mm</b></summary></b>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/Lagtexter_avtalslagen mm/Avtalslagen.pdf">Avtalslagen</a></li>
+
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>OVK och energideklarationer mm</b></summary></b>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/OVK och energideklarationer mm/BFS2025-6 OVK 5.pdf">BFS 2025:6 OVK 5</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/CEX BFS2023-1_Konsolidering.pdf">CEX BFS 2023:1 – Konsolidering</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/CEX7 BFS2025-9.pdf">CEX 7 BFS 2025:9</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Förordning (2006_1592) om energideklaration för byggnader _ Lagen.nu.pdf">Förordning (2006:1592) om energideklaration för byggnader</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Konsoliderad_bed_bfs_2007-4.pdf">Konsoliderad BED BFS 2007:4</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Lag (2006_985) om energideklaration för byggnader _ Lagen.nu.pdf">Lag (2006:985) om energideklaration för byggnader</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Lathund OVK rev juli 2025.pdf">Lathund OVK, rev juli 2025</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Microsoft Word - BFS 2017-6-BEN-2.pdf">BFS 2017:6 BEN 2</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/OVKAR.pdf">OVKAR</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Utdrag ur Funkis OVK-regelsamling 26.pdf">Utdrag ur Funkis OVK-regelsamling 26</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/VÄS3.pdf">VÄS 3</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Översikt Byggregler uppdat 2025.pdf">Översikt Byggregler, uppdat 2025</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Översikt PBL MB AML.pdf">Översikt PBL, MB, AML</a></li>
+
+<li><a href="pdf/vnti/OVK och energideklarationer mm/Översikt om Energideklarationer.pdf">Översikt om energideklarationer</a></li>
+
+</ul>
+</div>
+</details>
+
+<details class="cat">
+<summary><b>Standardavtal</b></summary></b>
+<div class="cat-body">
+<ul>
+<li><a href="pdf/vnti/Standardavtal/Gotlandsdomen.pdf">Gotlandsdomen</a></li>
+
+<li><a href="pdf/vnti/Standardavtal/VU20_20200526.pdf">VU 20 (2020-05-26)</a></li>
+
+<li><a href="pdf/vnti/Standardavtal/leveransklausuler-byggbranschen-2008.pdf">Leveransklausuler för byggbranschen (2008)</a></li>
+
+</ul>
+</div>
+</details>
+
+</main>
+
+  <!-- Långa vågen innan footer -->
+  <img class="wave-full" src="Vagen_lang.png" alt="Dekorativ våg">
+
+  <footer>© 2025 INSU Yrkeshögskola – Digitalt tentamensmaterial</footer>
+
+</body>
+</html>
