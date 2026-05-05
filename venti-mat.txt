@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KAV – Entreprenadjuridik | INSU</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    :root {
+      --insu-yellow: #edc73c;
+    }
+
+    @font-face {
+      font-family: "CircularPro Medium";
+      src: url("fonts/CircularPro-Medium.woff2") format("woff2"),
+           url("fonts/CircularPro-Medium.woff") format("woff");
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "CircularPro Black";
+      src: url("fonts/CircularPro-Black.woff2") format("woff2"),
+           url("fonts/CircularPro-Black.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "CircularPro Medium", sans-serif;
+      margin: 0;
+      background: #fffef8;
+      color: #000;
+    }
+
+    /* --- Header och logotyp --- */
+    .insu-header {
+      text-align: center;
+      padding: 25px 0 10px;
+    }
+
+    .insu-header img {
+      height: 60px;
+    }
+
+    /* --- Banner --- */
+    .banner {
+      background-image: url("kav-law.jpeg"); /* <- KAV-bild */
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 0 8px 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(237, 199, 60, 0.5); /* gul overlay, 50% */
+    }
+
+    .banner-content {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      font-family: "CircularPro Medium", sans-serif;
+    }
+
+    .banner h1 {
+      font-family: "CircularPro Black", sans-serif;
+      font-size: 1.9rem;
+      margin-bottom: 8px;
+    }
+
+    .banner p {
+      font-size: 1rem;
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    /* --- Huvudinnehåll --- */
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .pdf-list ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+    }
+
+    .pdf-list li {
+      margin-bottom: 14px;
+    }
+
+    .pdf-list a {
+      display: block;
+      padding: 12px 18px;
+      background: #fff8dc;
+      border-left: 4px solid var(--insu-yellow);
+      text-decoration: none;
+      color: #000;
+      font-family: "CircularPro Medium", sans-serif;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .pdf-list a:hover {
+      background: var(--insu-yellow);
+      color: #000;
+    }
+
+    /* --- Navigering & footer --- */
+    .back-link {
+      display: inline-block;
+      margin: 10px 20px;
+      text-decoration: none;
+      color: #000;
+      font-size: 0.95rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .back-link:hover {
+      border-color: #000;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      padding: 20px;
+      color: #555;
+    }
+
+      .wave-full{display:block;width:100%;height:auto;margin:30px 0 0;}
+  </style>
+</head>
+<body>
+
+  <!-- INSU logga -->
+  <div class="insu-header">
+   <a href="https://insu-yh.github.io/digiexam/mtr-resurser.html"> <img src="YH-logo.png" alt="INSU Yrkeshögskola"></a>
+  </div>
+
+  <!-- Banner med gul overlay -->
+  <header class="banner">
+    <div class="banner-content">
+      <h1>Mätteknik Venti - 2026 </h1>
+      <p>Här hittar du det godkända materialet som är tillåtet under din digitala tentamen.</p>
+    </div>
+  </header>
+
+  <!-- Lista med PDF-filer -->
+  <main class="pdf-list">
+    <h2>Godkänt material</h2>
+    <ul>
+<li><a href="pdf/vnti/Matteknik/11063 - Guide_och_forklaring_till_Svensk_Standard_SS_EN_16211_2024.pdf">11063 - Guide och förklaring till Svensk Standard SS EN 16211 2024</a></li>
+    </ul>
+  </main>
+
+ <center></center> <a href="mtr-resurser.html" class="back-link">⬅ Tillbaka till materialöversikt</a></center>
+
+
+  <!-- Långa vågen innan footer -->
+  <img class="wave-full" src="Vagen_lang.png" alt="Dekorativ våg">
+
+  <footer>© 2025 INSU Yrkeshögskola – Digitalt tentamensmaterial</footer>
+
+</body>
+</html>
