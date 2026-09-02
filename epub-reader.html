@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>E-bok – INSU</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    :root {
+      --insu-yellow: #edc73c;
+      --paper: #fffef8;
+      --ink: #111;
+      --muted: #5f6368;
+      --border: #d9d9d3;
+      --panel: #fff;
+      --shadow: 0 2px 10px rgba(0, 0, 0, .10);
+    }
+
+    @font-face {
+      font-family: "CircularPro Medium";
+      src: url("fonts/CircularPro-Medium.woff2") format("woff2"),
+           url("fonts/CircularPro-Medium.woff") format("woff");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "CircularPro Black";
+      src: url("fonts/CircularPro-Black.woff2") format("woff2"),
+           url("fonts/CircularPro-Black.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.5 "CircularPro Medium", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+
+    .app {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 76px;
+      padding: 10px 22px;
+      background: #fff;
+      border-bottom: 4px solid var(--insu-yellow);
+    }
+
+    .header img { display: block; width: auto; height: 50px; }
+    .book-heading { min-width: 0; }
+    .eyebrow { margin: 0; color: var(--muted); font-size: .85rem; }
+    h1 {
+      overflow: hidden;
+      margin: 1px 0 0;
+      font-family: "CircularPro Black", sans-serif;
+      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      background: #f5f5f1;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar-spacer { flex: 1; }
+    .control {
+      min-height: 40px;
+      padding: 8px 13px;
+      color: #111;
+      background: #fff;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+    }
+    .control:hover:not(:disabled), .control:focus-visible {
+      border-color: #111;
+      outline: 2px solid transparent;
+    }
+    .control[aria-expanded="true"] { background: var(--insu-yellow); border-color: #111; }
+
+    .search-form { position: relative; display: flex; gap: 6px; }
+    .search-form input {
+      width: min(28vw, 280px);
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      background: #fff;
+    }
+    .search-form input:focus { border-color: #111; outline: 2px solid var(--insu-yellow); }
+
+    .workspace { position: relative; min-height: 0; overflow: hidden; }
+    .reader-shell { height: 100%; padding: 14px; }
+    #viewer {
+      height: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+    }
+
+    .drawer {
+      position: absolute;
+      z-index: 5;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: min(390px, 88vw);
+      padding: 18px;
+      overflow: auto;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      box-shadow: 5px 0 18px rgba(0, 0, 0, .16);
+      transform: translateX(-105%);
+      transition: transform .2s ease;
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .drawer h2 { margin: 0; font-family: "CircularPro Black", sans-serif; font-size: 1.15rem; }
+    .close-button { padding: 6px 10px; background: #fff; border: 1px solid #aaa; border-radius: 4px; }
+
+    .toc-list, .results-list { margin: 14px 0 0; padding: 0; list-style: none; }
+    .toc-list ul { padding-left: 18px; list-style: none; }
+    .toc-link, .result-link {
+      display: block;
+      width: 100%;
+      padding: 9px 7px;
+      color: #111;
+      text-align: left;
+      text-decoration: none;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid #eee;
+    }
+    .toc-link:hover, .result-link:hover { background: #fff8d9; }
+    .result-excerpt { display: block; margin-top: 3px; color: var(--muted); font-size: .83rem; }
+    .empty { color: var(--muted); }
+
+    .status-overlay {
+      position: absolute;
+      z-index: 4;
+      inset: 14px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .status-overlay[hidden] { display: none; }
+    .status-card { max-width: 540px; }
+    .status-card h2 { margin: 0 0 8px; font-family: "CircularPro Black", sans-serif; }
+    .status-card p { margin: 0; color: var(--muted); }
+
+    .footer-nav {
+      display: grid;
+      grid-template-columns: 1fr minmax(100px, auto) 1fr;
+      align-items: center;
+      gap: 12px;
+      min-height: 62px;
+      padding: 9px 14px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+    }
+    .footer-nav .next { justify-self: end; }
+    #location { color: var(--muted); font-size: .86rem; text-align: center; }
+
+    @media (max-width: 680px) {
+      .header { min-height: 62px; padding: 7px 12px; }
+      .header img { height: 40px; }
+      .eyebrow { display: none; }
+      .toolbar { flex-wrap: wrap; padding: 7px; }
+      .toolbar-spacer { display: none; }
+      .search-form { order: 2; width: 100%; }
+      .search-form input { flex: 1; width: auto; }
+      .reader-shell { padding: 7px; }
+      .status-overlay { inset: 7px; }
+      .footer-nav { gap: 7px; padding: 7px; }
+      .footer-nav .control { padding-inline: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .drawer { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <a href="mtr-resurser.html" aria-label="Till materialöversikten">
+        <img src="YH-logo.png" alt="INSU Yrkeshögskola">
+      </a>
+      <div class="book-heading">
+        <p class="eyebrow">Godkänt material för digital examen</p>
+        <h1 id="book-title">E-bok</h1>
+      </div>
+    </header>
+
+    <nav class="toolbar" aria-label="Verktyg för e-boken">
+      <button id="toc-button" class="control" type="button" aria-controls="toc-drawer" aria-expanded="false">Innehåll</button>
+      <button id="font-down" class="control" type="button" aria-label="Minska textstorleken">A−</button>
+      <button id="font-up" class="control" type="button" aria-label="Öka textstorleken">A+</button>
+      <div class="toolbar-spacer"></div>
+      <form id="search-form" class="search-form" role="search">
+        <label for="search-input" class="visually-hidden">Sök i boken</label>
+        <input id="search-input" type="search" placeholder="Sök i boken" autocomplete="off">
+        <button class="control" type="submit">Sök</button>
+      </form>
+    </nav>
+
+    <main class="workspace">
+      <aside id="toc-drawer" class="drawer" aria-label="Innehållsförteckning" aria-hidden="true">
+        <div class="drawer-header">
+          <h2>Innehåll</h2>
+          <button id="toc-close" class="close-button" type="button">Stäng</button>
+        </div>
+        <nav id="toc" aria-label="Bokens innehållsförteckning"></nav>
+      </aside>
+
+      <aside id="search-drawer" class="drawer" aria-label="Sökresultat" aria-hidden="true">
+        <div class="drawer-header">
+          <h2 id="search-heading">Sökresultat</h2>
+          <button id="search-close" class="close-button" type="button">Stäng</button>
+        </div>
+        <div id="search-status" class="empty" aria-live="polite"></div>
+        <ol id="search-results" class="results-list"></ol>
+      </aside>
+
+      <section class="reader-shell" aria-label="E-boksläsare">
+        <div id="viewer"></div>
+      </section>
+
+      <div id="status-overlay" class="status-overlay">
+        <div class="status-card">
+          <h2 id="status-title">Öppnar e-boken…</h2>
+          <p id="status-text">Det kan ta en liten stund om boken är stor.</p>
+        </div>
+      </div>
+    </main>
+
+    <nav class="footer-nav" aria-label="Sidbläddring">
+      <button id="previous" class="control" type="button">← Föregående</button>
+      <span id="location" aria-live="polite"></span>
+      <button id="next" class="control next" type="button">Nästa →</button>
+    </nav>
+  </div>
+
+  <style>.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+  <script src="js/jszip.min.js"></script>
+  <script src="js/epub.min.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const params = new URLSearchParams(window.location.search);
+      const bookPath = params.get("book") || "";
+      const suppliedTitle = params.get("title") || "";
+      const validBookPath = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))(?!.*[?#])[a-zA-Z0-9_./%+() -]+\.epub$/i.test(bookPath);
+
+      const els = {
+        title: document.getElementById("book-title"),
+        viewer: document.getElementById("viewer"),
+        overlay: document.getElementById("status-overlay"),
+        statusTitle: document.getElementById("status-title"),
+        statusText: document.getElementById("status-text"),
+        previous: document.getElementById("previous"),
+        next: document.getElementById("next"),
+        location: document.getElementById("location"),
+        tocButton: document.getElementById("toc-button"),
+        tocDrawer: document.getElementById("toc-drawer"),
+        tocClose: document.getElementById("toc-close"),
+        toc: document.getElementById("toc"),
+        fontDown: document.getElementById("font-down"),
+        fontUp: document.getElementById("font-up"),
+        searchForm: document.getElementById("search-form"),
+        searchInput: document.getElementById("search-input"),
+        searchDrawer: document.getElementById("search-drawer"),
+        searchClose: document.getElementById("search-close"),
+        searchHeading: document.getElementById("search-heading"),
+        searchStatus: document.getElementById("search-status"),
+        searchResults: document.getElementById("search-results")
+      };
+
+      let book;
+      let rendition;
+      let fontSize = 100;
+      let searchToken = 0;
+
+      function showError(title, text) {
+        els.statusTitle.textContent = title;
+        els.statusText.textContent = text;
+        els.overlay.hidden = false;
+        [els.previous, els.next, els.tocButton, els.fontDown, els.fontUp].forEach(button => button.disabled = true);
+      }
+
+      function setDrawer(drawer, open) {
+        [els.tocDrawer, els.searchDrawer].forEach(item => {
+          if (item !== drawer) {
+            item.classList.remove("open");
+            item.setAttribute("aria-hidden", "true");
+          }
+        });
+        drawer.classList.toggle("open", open);
+        drawer.setAttribute("aria-hidden", String(!open));
+        els.tocButton.setAttribute("aria-expanded", String(open && drawer === els.tocDrawer));
+      }
+
+      function tocMarkup(items) {
+        const list = document.createElement("ul");
+        list.className = "toc-list";
+        items.forEach(item => {
+          const li = document.createElement("li");
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "toc-link";
+          button.textContent = item.label.trim();
+          button.addEventListener("click", () => {
+            rendition.display(item.href);
+            setDrawer(els.tocDrawer, false);
+          });
+          li.appendChild(button);
+          if (item.subitems && item.subitems.length) li.appendChild(tocMarkup(item.subitems));
+          list.appendChild(li);
+        });
+        return list;
+      }
+
+      function cleanExcerpt(value) {
+        return value.replace(/\s+/g, " ").trim().slice(0, 180);
+      }
+
+      async function searchBook(query) {
+        const token = ++searchToken;
+        const normalized = query.trim();
+        if (!normalized) return;
+
+        els.searchHeading.textContent = `Sökresultat: ${normalized}`;
+        els.searchResults.replaceChildren();
+        els.searchStatus.textContent = "Söker i boken…";
+        setDrawer(els.searchDrawer, true);
+
+        const results = [];
+        const sections = [];
+        book.spine.each(section => sections.push(section));
+
+        for (const section of sections) {
+          if (token !== searchToken) return;
+          try {
+            await section.load(book.load.bind(book));
+            const matches = section.find(normalized);
+            matches.forEach(match => results.push(match));
+          } finally {
+            section.unload();
+          }
+        }
+
+        if (token !== searchToken) return;
+        els.searchStatus.textContent = results.length ? `${results.length} träffar` : "Inga träffar hittades.";
+        results.forEach((result, index) => {
+          const li = document.createElement("li");
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "result-link";
+          const label = document.createElement("strong");
+          label.textContent = `Träff ${index + 1}`;
+          const excerpt = document.createElement("span");
+          excerpt.className = "result-excerpt";
+          excerpt.textContent = cleanExcerpt(result.excerpt || "");
+          button.append(label, excerpt);
+          button.addEventListener("click", () => {
+            rendition.display(result.cfi);
+            setDrawer(els.searchDrawer, false);
+          });
+          li.appendChild(button);
+          els.searchResults.appendChild(li);
+        });
+      }
+
+      if (!validBookPath) {
+        showError("Ingen e-bok angiven", "Länken till läsaren saknar en giltig EPUB-fil. Gå tillbaka till materialsidan och öppna boken därifrån.");
+        return;
+      }
+
+      if (suppliedTitle) els.title.textContent = suppliedTitle;
+
+      try {
+        book = ePub(bookPath);
+        rendition = book.renderTo("viewer", {
+          width: "100%",
+          height: "100%",
+          flow: "paginated",
+          spread: "auto"
+        });
+
+        rendition.themes.default({
+          body: {
+            "font-family": "Arial, Helvetica, sans-serif !important",
+            "line-height": "1.55 !important",
+            color: "#111 !important",
+            padding: "0 2% !important"
+          },
+          a: { color: "#111 !important" }
+        });
+
+        rendition.hooks.content.register(contents => {
+          contents.document.addEventListener("click", event => {
+            const link = event.target.closest("a[href]");
+            if (!link) return;
+            const href = link.getAttribute("href") || "";
+            if (/^(?:https?:|mailto:|tel:|\/\/)/i.test(href)) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }, true);
+        });
+
+        Promise.all([book.ready, book.loaded.metadata, book.loaded.navigation])
+          .then(async ([, metadata, navigation]) => {
+            const resolvedTitle = suppliedTitle || metadata.title || "E-bok";
+            els.title.textContent = resolvedTitle;
+            document.title = `${resolvedTitle} – INSU`;
+            els.toc.replaceChildren(tocMarkup(navigation.toc || []));
+            await rendition.display();
+            els.overlay.hidden = true;
+          })
+          .catch(() => showError("E-boken kunde inte öppnas", "Kontrollera att filnamnet i länken stämmer och att EPUB-filen har lagts i rätt mapp."));
+
+        rendition.on("relocated", location => {
+          const percentage = location.start.percentage;
+          els.location.textContent = Number.isFinite(percentage) ? `${Math.round(percentage * 100)} %` : "";
+          els.previous.disabled = location.atStart;
+          els.next.disabled = location.atEnd;
+        });
+
+        els.previous.addEventListener("click", () => rendition.prev());
+        els.next.addEventListener("click", () => rendition.next());
+        els.fontDown.addEventListener("click", () => {
+          fontSize = Math.max(70, fontSize - 10);
+          rendition.themes.fontSize(`${fontSize}%`);
+        });
+        els.fontUp.addEventListener("click", () => {
+          fontSize = Math.min(180, fontSize + 10);
+          rendition.themes.fontSize(`${fontSize}%`);
+        });
+        els.tocButton.addEventListener("click", () => setDrawer(els.tocDrawer, !els.tocDrawer.classList.contains("open")));
+        els.tocClose.addEventListener("click", () => setDrawer(els.tocDrawer, false));
+        els.searchClose.addEventListener("click", () => {
+          searchToken++;
+          setDrawer(els.searchDrawer, false);
+        });
+        els.searchForm.addEventListener("submit", event => {
+          event.preventDefault();
+          searchBook(els.searchInput.value);
+        });
+
+        document.addEventListener("keydown", event => {
+          if (event.target.matches("input, textarea")) return;
+          if (event.key === "ArrowLeft") rendition.prev();
+          if (event.key === "ArrowRight") rendition.next();
+          if (event.key === "Escape") {
+            setDrawer(els.tocDrawer, false);
+            setDrawer(els.searchDrawer, false);
+          }
+        });
+      } catch (error) {
+        showError("E-boken kunde inte öppnas", "Ett tekniskt fel uppstod när läsaren startades.");
+      }
+    })();
+  </script>
+</body>
+</html>
