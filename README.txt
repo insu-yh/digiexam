@@ -15,7 +15,17 @@ används av läsaren.
 LÄNKA TILL EN BOK
 -----------------
 
-Lägg EPUB-filen i mappen epub. Om filen heter kursbok.epub blir länken:
+Testboken finns redan i mappen epub. Den öppnas med länken:
+
+  epub-reader.html?book=epub/testbok.epub&title=Lord%20of%20Mysteries%20Volume%201%3A%20Clown
+
+Färdig HTML för testboken:
+
+  <a href="epub-reader.html?book=epub/testbok.epub&amp;title=Lord%20of%20Mysteries%20Volume%201%3A%20Clown">
+    Öppna Lord of Mysteries Volume 1: Clown
+  </a>
+
+För andra böcker gäller samma princip. Om filen heter kursbok.epub blir länken:
 
   epub-reader.html?book=epub/kursbok.epub&title=Kursbokens%20titel
 
@@ -62,4 +72,3 @@ TREDJEPARTSBIBLIOTEK
     https://github.com/futurepress/epub.js
   * JSZip 3.10.1, MIT eller GPLv3
     https://github.com/Stuk/jszip
-
